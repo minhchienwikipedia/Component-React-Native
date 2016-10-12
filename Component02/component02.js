@@ -5,7 +5,7 @@ import{
   Navigator,
   TouchableHighlight
 } from 'react-native';
-
+import TimerView from './timerView.js';
 import ScrollableTabView, { ScrollableTabBar, DefaultTabBar} from 'react-native-scrollable-tab-view';
 class Component02 extends Component{
   render() {
@@ -17,7 +17,7 @@ class Component02 extends Component{
       initialPage={0}
       renderTabBar={() => <DefaultTabBar />}
     >
-      <Text tabLabel='Tab #1'>My</Text>
+      <TimerView tabLabel='Timer'>My</TimerView>
       <Text tabLabel='Tab #2'>favorite</Text>
       <Text tabLabel='Tab #3'>project</Text>
       <Text tabLabel='Tab #4'>favorite</Text>
