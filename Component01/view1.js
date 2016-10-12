@@ -13,9 +13,9 @@ var PAGES = [
     'https://images.unsplash.com/photo-1441716844725-09cedc13a4e7?h=1024',
     'https://images.unsplash.com/photo-1441448770220-76743f9e6af6?h=1024',
     'https://images.unsplash.com/photo-1441260038675-7329ab4cc264?h=1024',
-    'https://images.unsplash.com/photo-1441126270775-739547c8680c?h=1024',
-    'https://images.unsplash.com/photo-1440964829947-ca3277bd37f8?h=1024',
-    'https://images.unsplash.com/photo-1440847899694-90043f91c7f9?h=1024'
+  'https://images.unsplash.com/photo-1441126270775-739547c8680c?h=1024',
+  'https://images.unsplash.com/photo-1440964829947-ca3277bd37f8?h=1024',
+  'https://images.unsplash.com/photo-1440847899694-90043f91c7f9?h=1024'
 ];
 
 export default class View1 extends Component {
@@ -34,10 +34,12 @@ export default class View1 extends Component {
 
   renderRow(data: Object){
     return (
-      <Image
-      style={{width:deviceWidth, height: deviceHeight,flex:1}}
-        source={{uri: data}}
-        />
+        <View style={styles.box}>
+            <Text style={styles.boxText}>{data.name}</Text>
+            <Image
+             source={{uri: data}}
+             style={styles.boxImage} />
+        </View>
     );
   }
 }
@@ -48,4 +50,34 @@ var styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
   },
+  container: {
+       flex: 1,
+  },
+  list: {
+       flex: 1,
+       flexDirection: 'row',
+       flexWrap: 'wrap',
+       justifyContent: 'center'
+  },
+  box: {
+      width: deviceWidth,
+      backgroundColor: 'red',
+      height: deviceWidth,
+      alignItems: 'stretch',
+      margin: 3
+  },
+  boxImage: {
+      flex: 1,
+      width: deviceWidth,
+  },
+  boxText: {
+      flex: 1,
+      fontWeight: '900',
+      fontSize: 15,
+      color: 'white',
+      position: 'absolute',
+      bottom: 5,
+      right: 5,
+      backgroundColor: 'rgba(0,0,0,0)'
+ }
 });

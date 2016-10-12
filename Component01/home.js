@@ -20,6 +20,18 @@ export default class Home extends Component {
         <Text style={styles.text} onPress={Actions.slider}> Click to Slider
         </Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+        <Text style={styles.text} onPress={Actions.gridView}> Click to GridView
+        </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+        <Text style={styles.text} onPress={Actions.dropDown}> Click to DropDown
+        </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+        <Text style={styles.text} onPress={Actions.searchBar}> Click to SearchBar
+        </Text>
+        </TouchableOpacity>
       </View>
     );
   }

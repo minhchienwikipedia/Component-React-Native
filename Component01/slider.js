@@ -17,9 +17,10 @@ export default class SliderExample extends Component{
   constructor(props) {
     super(props);
     this.state = ({
-      value : 2,
+      value : 16,
       disabled: true,
       check: 'Enable',
+      backgroundColor: 'black'
     });
 
   }
@@ -28,7 +29,7 @@ export default class SliderExample extends Component{
       this.setState({
         disabled: false,
         check: 'Disabled',
-        backgroundColor: 'white'
+
       });
     }else {
       this.setState({
@@ -39,24 +40,45 @@ export default class SliderExample extends Component{
 
   }
 
-  changeColor(color: string){
-    if(this.state.backgroundColor=='white')
-    {
-      this.setState = ({
-          backgroundColor: color
-      });
-    }
-    else {
-      this.setState = ({
-          backgroundColor: color
-      });
+  changeColor(color){
+    switch (color) {
+      case 'blue':
+        this.setState({
+          backgroundColor: '#337ab7'
+        });
+      break;
+      case 'green':
+        this.setState({
+          backgroundColor: '#4dff4d'
+        });
+      break;
+      case 'yellow':
+        this.setState({
+          backgroundColor: '#f0ad4e'
+        });
+      break;
+      case 'pink':
+        this.setState({
+          backgroundColor: '#ff4d94'
+        });
+      break;
+
+
     }
   }
-
+  reset(){
+    this.setState({
+        backgroundColor: 'black'
+    });
+  }
   render() {
     return (
-      <View style={{backgroundColor: this.state.backgroundColor, flex:1}}>
+
       <View style={styles.container}>
+        <Text style={{fontSize:this.state.value,
+          color: this.state.backgroundColor}}>
+          HELLO
+        </Text>
         <Slider
           disabled = {this.state.disabled}
           trackStyle={{
@@ -64,8 +86,8 @@ export default class SliderExample extends Component{
             backgroundColor: '#e7e7e7'
           }}
           value={this.state.value}
-          minimumValue={1}
-          maximumValue={5}
+          minimumValue={10}
+          maximumValue={30}
           onValueChange={(value) => this.setState({value})} />
         <Text>Value: {this.state.value}</Text>
         <TouchableOpacity style={styles.button} onPress={()=>{this.onClick()}}>
@@ -74,20 +96,26 @@ export default class SliderExample extends Component{
           </Text>
         </TouchableOpacity>
         <View style={styles.changeBackground}>
-        <TouchableOpacity style={styles.button} onPress={()=>{this.changeColor('blue')}}>
-          <Text style={styles.text}>
-            Change to Blue
-          </Text>
+        <TouchableOpacity style={styles.pickColor} onPress={()=>{this.changeColor('blue')}}>
+        <Text style={{flex:1, backgroundColor:'#337ab7'}}></Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={()=>{this.changeColor('white')}}>
-          <Text style={styles.text}>
-            Change to White
-          </Text>
+        <TouchableOpacity style={styles.pickColor} onPress={()=>{this.changeColor('green')}}>
+        <Text style={{flex:1, backgroundColor:'#4dff4d'}}></Text>
         </TouchableOpacity>
-
+        <TouchableOpacity style={styles.pickColor} onPress={()=>{this.changeColor('yellow')}}>
+        <Text style={{flex:1, backgroundColor:'#f0ad4e'}}></Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.pickColor} onPress={()=>{this.changeColor('pink')}}>
+        <Text style={{flex:1, backgroundColor:'#ff4d94'}}></Text>
+        </TouchableOpacity>
         </View>
+        <TouchableOpacity style={styles.button} onPress={()=>{this.reset()}}>
+          <Text style={styles.text}>
+            Reset
+          </Text>
+        </TouchableOpacity>
       </View>
-      </View>
+
     );
   }
 }
@@ -100,6 +128,11 @@ var styles = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'center',
 
+  },
+  pickColor: {
+    marginTop:10,
+    width:40,
+    height:40,
   },
   button: {
     marginTop:10,
