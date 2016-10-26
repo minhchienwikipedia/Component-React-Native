@@ -19,34 +19,6 @@ var deviceHeight = Dimensions.get('window').height;
 var deviceWidth = Dimensions.get('window').width;
 
 
-var DrawerLockModeSwitches = React.createClass({
-
-  render: function() {
-    const {
-      value,
-      onValueChange,
-    } = this.props;
-
-    return (
-      <View>
-      <View style={[styles.container, styles.split]}>
-        <Switch onValueChange={value => value ? onValueChange('unlocked') : onValueChange('unlocked')} value={value === 'unlocked'} />
-        <Text style={styles.spacedLeft}>Unlocked</Text>
-      </View>
-      <View style={[styles.container, styles.split]}>
-        <Switch onValueChange={value => value ? onValueChange('locked-closed') : onValueChange('unlocked')} value={value === 'locked-closed'} />
-        <Text style={styles.spacedLeft}>locked-closed</Text>
-      </View>
-      <View style={[styles.container, styles.split]}>
-        <Switch onValueChange={value => value ? onValueChange('locked-open') : onValueChange('unlocked')} value={value === 'locked-open'} />
-        <Text style={styles.spacedLeft}>locked-open</Text>
-      </View>
-      </View>
-    );
-  }
-});
-
-
 class loginView extends Component{
   constructor(){
     super();
@@ -210,7 +182,6 @@ class loginView extends Component{
       <DrawerLayout
        onDrawerSlide={(e) => this.setState({drawerSlideOutput: JSON.stringify(e.nativeEvent)})}
        onDrawerStateChanged={(e) => this.setState({drawerStateChangedOutput: JSON.stringify(e)})}
-
        drawerWidth={300}
        drawerLockMode={drawerLockMode}
        ref={(drawer) => { return this.drawer = drawer  }}
@@ -241,6 +212,20 @@ class loginView extends Component{
         </Image>
 
        <View style={styles.container}>
+       <Image style={{width:deviceWidth,height:135}} source={require('./img/bgr_top.png')}/>
+        <View style={styles.container_top}>
+          <View style={{flex:1,flexDirection:'row',marginTop:10}}>
+            <Image style={{width: 30,height:30}} source={require('./img/ico_mangacha.png')}/>
+            <Text style={fontWeight: 'bold'}>
+              TRUYỆN MỚI
+            </Text>
+          </View>
+          <View>
+            <Image style={{width: 80,height:40}} source={require('./img/btn_viewall.png')}/>
+          </View>
+        </View>
+        <View style={styles.container_bot}>
+        </View>
        </View>
      </DrawerLayout>
      </Image>
@@ -253,10 +238,24 @@ class loginView extends Component{
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginTop: 30,
-      padding:30
+
+    },
+    container_top:{
+      paddingLeft:10,
+      paddingTop:10,
+      flexDirection:'row',
+      justifyContent: 'space-between',
+      flex:1,
+      backgroundColor:'white'
+    },
+    container_bot:{
+      paddingLeft:10,
+      paddingTop:10,
+      flexDirection:'row',
+      alignItems:'center',
+      justifyContent: 'space-between',
+      flex:1
+
     },
     toolbar: {
       height:45,
