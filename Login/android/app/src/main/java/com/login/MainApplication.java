@@ -16,7 +16,7 @@ import com.magus.fblogin.FacebookLoginPackage;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
+
 import com.facebook.appevents.AppEventsLogger;
 public class MainApplication extends Application implements ReactApplication {
 
@@ -32,8 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-          new FacebookLoginPackage(),
-          new FBSDKPackage(mCallbackManager)
+          new FacebookLoginPackage()
       );
     }
   };

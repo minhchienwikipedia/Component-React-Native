@@ -11,8 +11,7 @@ import {
   Alert,
   AlertIOS
 } from 'react-native';
-import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel}
-from 'react-native-simple-radio-button';
+
 import DatePicker from 'react-native-datepicker';
 var radio_props = [
   {label: 'Nam  ', value: 0 },

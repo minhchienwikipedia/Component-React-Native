@@ -10,22 +10,27 @@ import{
   TextInput,
   Dimensions,
   Switch,
-  ScrollView
+  ScrollView,
+  ListView
 }from 'react-native';
+import GridView from "react-native-easy-grid-view";
 
 import SplashScreen from './splashscreen.js';
 import DrawerLayout from 'react-native-drawer-layout';
 var deviceHeight = Dimensions.get('window').height;
 var deviceWidth = Dimensions.get('window').width;
-
+const REQUEST_URL = 'http://mangacha.esy.es/api/listbook.php'
 
 class loginView extends Component{
   constructor(){
     super();
+
     this.state = {
       email: "",
       password: "",
       drawerLockMode: 'unlocked',
+      dataSource_gidview : new GridView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+      dataSource: new ListView.DataSource({rowHasChanged: (r1,r2) => r1!=r2}),
     };
   }
 
@@ -36,6 +41,56 @@ class loginView extends Component{
         data: data
       }
     })
+  }
+  componentDidMount(){
+    this.fetchData();
+    this.fetchData_gidview();
+  }
+  async fetchData_gidview() {
+    try {
+      let response = await fetch(REQUEST_URL);
+      let responseJson = await response.json();
+      this.setState({
+        dataSource_gidview: this.state.dataSource_gidview.cloneWithCells(responseJson.result,3),
+      });
+    } catch(error) {
+      console.error(error);
+    }
+  }
+  _renderCell(data) {
+       return (
+         <TouchableOpacity onPress={this.navigate.bind(this,'detail','hello'}}>
+       <View>
+            <Image
+            style={{height:120}}
+             source={{uri: data.avatar} }/>
+             <Text style={{textAlign:'center'}}>{data.name}</Text>
+       </View>
+       </TouchableOpacity>
+     )
+   }
+  async fetchData() {
+    try {
+      let response = await fetch(REQUEST_URL);
+      let responseJson = await response.json();
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(responseJson.result)
+      });
+    } catch(error) {
+      console.error(error);
+    }
+  }
+  renderData(data){
+    return(
+      <TouchableOpacity>
+      <View style={{flex:1, margin:5}}>
+        <Image
+         source={{uri: data.avatar}}
+         style={styles.boxImage} />
+         <Text style={{width:100,textAlign:'center'}}>{data.name}</Text>
+      </View>
+      </TouchableOpacity>
+    )
   }
   componentWillMount(){
     this.onChangeLanguage('0')
@@ -188,6 +243,7 @@ class loginView extends Component{
        keyboardDismissMode="on-drag"
        statusBarBackgroundColor="blue"
        renderNavigationView={() => navigationView}>
+       <ScrollView>
 
         <Image style={styles.toolbar} source={require('./img/bgr_toolbar.png')}>
           <View>
@@ -200,7 +256,6 @@ class loginView extends Component{
               MANGACHA
             </Text>
           </View>
-
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity>
               <Image style={styles.icon} source={require('./img/ico_load.png')}/>
@@ -213,22 +268,49 @@ class loginView extends Component{
 
        <View style={styles.container}>
        <Image style={{width:deviceWidth,height:135}} source={require('./img/bgr_top.png')}/>
+
         <View style={styles.container_top}>
-          <View style={{flex:1,flexDirection:'row',marginTop:10}}>
-            <Image style={{width: 30,height:30}} source={require('./img/ico_mangacha.png')}/>
-            <Text style={fontWeight: 'bold'}>
-              TRUYỆN MỚI
-            </Text>
+          <View style={{flexDirection:'row',justifyContent: 'space-between',}}>
+            <View style={{flex:1,flexDirection:'row',marginTop:10}}>
+              <Image style={{width: 30,height:30}} source={require('./img/ico_mangacha.png')}/>
+              <Text style={{fontWeight: 'bold',color:'#0074bd',margin:5}}>
+                TRUYỆN MỚI
+              </Text>
+            </View>
+            <TouchableOpacity style={{marginRight:10}}>
+              <Image style={{width: 80,height:40}} source={require('./img/btn_viewall.png')}/>
+            </TouchableOpacity>
           </View>
-          <View>
-            <Image style={{width: 80,height:40}} source={require('./img/btn_viewall.png')}/>
-          </View>
+          <ListView horizontal={true}
+            style={{flex:1}}
+            dataSource={this.state.dataSource}
+            renderRow={this.renderData.bind(this)}
+          />
         </View>
         <View style={styles.container_bot}>
+          <View style={{flexDirection:'row',justifyContent: 'space-between',}}>
+          <View style={{flex:1,flexDirection:'row',marginTop:10}}>
+            <Image style={{width: 30,height:30}} source={require('./img/ico_mangacha.png')}/>
+            <Text style={{fontWeight: 'bold',color:'#0074bd',margin:5}}>
+              TRUYỆN ĐỌC NHIỀU
+            </Text>
+          </View>
+          <TouchableOpacity style={{marginRight:10}}>
+            <Image style={{width: 80,height:40}} source={require('./img/btn_viewall.png')}/>
+          </TouchableOpacity>
+          </View>
+          <GridView dataSource={this.state.dataSource_gidview}
+                    spacing={8}
+                    style={{padding:5}}
+                    renderCell={this._renderCell.bind(this)}
+
+          />
         </View>
        </View>
+      </ScrollView>
      </DrawerLayout>
      </Image>
+
      </SplashScreen>
     );
   }
@@ -242,18 +324,13 @@ const styles = StyleSheet.create({
     },
     container_top:{
       paddingLeft:10,
-      paddingTop:10,
-      flexDirection:'row',
-      justifyContent: 'space-between',
+      paddingTop:5,
       flex:1,
       backgroundColor:'white'
     },
     container_bot:{
       paddingLeft:10,
-      paddingTop:10,
-      flexDirection:'row',
-      alignItems:'center',
-      justifyContent: 'space-between',
+      paddingTop:5,
       flex:1
 
     },
@@ -306,7 +383,7 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
     },
     leftTop: {
-      flex:2.5,
+      flex:0.4,
       width: null,
     },
     text_blue:{
@@ -317,7 +394,7 @@ const styles = StyleSheet.create({
       marginTop:10,
       marginLeft:10,
       width: null,
-      flex: 7.5,
+      flex: 9.5,
     },
     containerButton: {
       flex: 3,
@@ -348,7 +425,10 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
     },
-
+    boxImage: {
+        width: 100,
+        height:120
+    },
     textButton: {
       color: 'white',
       fontFamily: 'Roboto',
