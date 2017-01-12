@@ -49,10 +49,10 @@ export default class DemoDownload extends Component {
 
     const progressDivider = 1;
 
-    //this.setState({ imagePath: { uri: '' } });
+    this.setState({ imagePath: { uri: '' } });
 
     // Random file name needed to force refresh...
-    const downloadDest = `${RNFS.DocumentDirectoryPath}/${((Math.random() * 1000) | 0)}.zip`;
+    const downloadDest = url==downloadUrl?`${RNFS.DocumentDirectoryPath}/${((Math.random() * 1000) | 0)}.jpg`:`${RNFS.DocumentDirectoryPath}/${((Math.random() * 1000) | 0)}.zip`;
     // const downloadDest = RNFS.DocumentDirectoryPath;
 
     const ret = RNFS.downloadFile({ fromUrl: url, toFile: downloadDest, begin, progress, background, progressDivider });
@@ -62,7 +62,7 @@ export default class DemoDownload extends Component {
     ret.promise.then(res => {
       this.setState({ output: JSON.stringify(res) });
       this.setState({
-        // imagePath: { uri: 'file://' + downloadDest },
+        imagePath: { uri: 'file://' + downloadDest },
         filePath: downloadDest
       });
       console.log(downloadDest);
@@ -73,42 +73,42 @@ export default class DemoDownload extends Component {
       jobId = -1;
     });
   }
-
-  componentWillMount(){
-    const targetPath = RNFS.DocumentDirectoryPath;
-    this.setState({ imagePath: { uri: 'file://' + targetPath+'/Mangacha/app_googleplay.png' } });
-  }
+  //
+  // componentWillMount(){
+  //   const targetPath = RNFS.DocumentDirectoryPath;
+  //   this.setState({ imagePath: { uri: 'file://' + targetPath+'/Mangacha/app_googleplay.png' } });
+  // }
 
   showError(err) {
     this.setState({ output: `ERROR: Code: ${err.code} Message: ${err.message}` });
   }
-  async onDownload(){
-
-    RNFetchBlob.config({
-  fileCache : true,
- //path: path + 'avatar3.png',
-  type : 'file',
-  // android only options, these options be a no-op on IOS
-  addAndroidDownloads : {
-    useDownloadManager : true,
-    // Show notification when response data transmitted
-    notification : true,
-    // Title of download notification
-    title : 'Great ! Download Success ! :O ',
-    // File description (not notification description)
-    description : 'An image file.',
-    mime : 'image/png',
-    // Make the file scannable  by media scanner
-    meidaScannable : true,
-  }
-})
-.fetch('GET', 'http://www.freelogovectors.net/wp-content/uploads/2013/02/avatar3.png')
-.then((res) => {// the temp file path
-console.log('The file saved to ', res.path());
-this.setState({ imagePath: { uri: 'file://' + res.path() } });
-});
-
-  }
+//   async onDownload(){
+//
+//     RNFetchBlob.config({
+//   fileCache : true,
+//  //path: path + 'avatar3.png',
+//   type : 'file',
+//   // android only options, these options be a no-op on IOS
+//   addAndroidDownloads : {
+//     useDownloadManager : true,
+//     // Show notification when response data transmitted
+//     notification : true,
+//     // Title of download notification
+//     title : 'Great ! Download Success ! :O ',
+//     // File description (not notification description)
+//     description : 'An image file.',
+//     mime : 'image/png',
+//     // Make the file scannable  by media scanner
+//     meidaScannable : true,
+//   }
+// })
+// .fetch('GET', 'http://www.freelogovectors.net/wp-content/uploads/2013/02/avatar3.png')
+// .then((res) => {// the temp file path
+// console.log('The file saved to ', res.path());
+// this.setState({ imagePath: { uri: 'file://' + res.path() } });
+// });
+//
+//   }
 
   unZip(){
     const sourcePath  = this.state.filePath;
@@ -116,6 +116,7 @@ this.setState({ imagePath: { uri: 'file://' + res.path() } });
 
     ZipArchive.unzip(sourcePath, targetPath)
   .then(() => {
+    this.setState({ output: 'unzip completed!' });
     console.log('unzip completed!' + targetPath)
 
   })
@@ -126,9 +127,14 @@ this.setState({ imagePath: { uri: 'file://' + res.path() } });
   render(){
     return(
       <View>
-      <TouchableOpacity onPress={this.downloadFileTest.bind(this, true, downloadUrlZip) }>
+      <TouchableOpacity onPress={this.downloadFileTest.bind(this, true, downloadUrl) }>
       <Text>
-      Download
+      Download Image
+      </Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={this.downloadFileTest.bind(this, true, downloadUrlZip ) }>
+      <Text>
+      Download Zip
       </Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={()=>this.unZip() }>
@@ -138,7 +144,6 @@ this.setState({ imagePath: { uri: 'file://' + res.path() } });
       </TouchableOpacity>
       <View>
           <Text style={styles.instructions}>{this.state.output}</Text>
-
           <Image style={styles.image} source={this.state.imagePath}></Image>
         </View>
       </View>
